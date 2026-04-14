@@ -4,8 +4,9 @@ export function middleware(request: NextRequest) {
   const hostname = request.headers.get('host') || '';
   const url = request.nextUrl.clone();
 
-  // Extract subdomain
-  const subdomain = getSubdomain(hostname);
+  // Extract subdomain — also support ?mode=app for Railway preview testing
+  const modeParam = url.searchParams.get('mode');
+  const subdomain = modeParam === 'app' ? 'app' : getSubdomain(hostname);
 
   // If we're on the app subdomain, rewrite to /app routes
   if (subdomain === 'app') {
